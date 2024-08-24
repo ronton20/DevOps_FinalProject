@@ -32,11 +32,20 @@ jobs:
         ssh-keyscan -H ${{ secrets.AWS_EC2_IP }} >> ~/.ssh/known_hosts
         scp -r ./* ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_IP }}:/home/${{ secrets.AWS_EC2_USER }}/devops_project
 
+    - name: Install Python and dependencies on EC2
+      run: |
+          ssh ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_IP }} << 'EOF'
+            sudo yum update -y
+            sudo yum install -y python3 python3-pip
+            pip3 install --upgrade pip
+            cd /home/${{ secrets.AWS_EC2_USER }}/devops_project
+            pip3 install -r requirements.txt
+          EOF
+    
     - name: Deploy on EC2
       run: |
         ssh ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_IP }} << 'EOF'
           cd /home/${{ secrets.AWS_EC2_USER }}/devops_project
-          pip install -r requirements.txt
-          python app.py
+          python3 app.py
 
         EOF

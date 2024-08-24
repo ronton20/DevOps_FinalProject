@@ -1,5 +1,6 @@
 from flask import Flask, Blueprint, jsonify
 from flask_restplus import Api
+from collections.abc import MutableMapping
 from ma import ma
 from db import db
 

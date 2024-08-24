@@ -1,6 +1,5 @@
 from flask import Flask, Blueprint, jsonify
 from flask_restplus import Api
-from collections.abc import MutableMapping
 from ma import ma
 from db import db
 
@@ -38,7 +37,8 @@ items_ns.add_resource(ItemList, "")
 store_ns.add_resource(Store, "/<int:id>")
 stores_ns.add_resource(StoreList, "")
 
+db.init_app(app)
+ma.init_app(app)
+
 if __name__ == "__main__":
-    db.init_app(app)
-    ma.init_app(app)
     app.run(port=5000, debug=True, host="0.0.0.0")

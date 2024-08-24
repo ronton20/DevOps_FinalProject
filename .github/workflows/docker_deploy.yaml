@@ -23,4 +23,4 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: idanmalka123/devops-final:latest
+        tags: ronton20/devops-final-project:latest

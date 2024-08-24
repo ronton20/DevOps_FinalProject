@@ -36,6 +36,7 @@ jobs:
       run: |
         ssh ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_IP }} << 'EOF'
           cd /home/${{ secrets.AWS_EC2_USER }}/devops_project
-          docker-compose down
-          docker-compose up -d --build
+          pip install -r requirements.txt
+          python app.py
+
         EOF

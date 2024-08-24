@@ -1,0 +1,33 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main  # or the branch you want to trigger the deployment
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
+    - name: Copy files to EC2
+      run: |
+        ssh-keyscan -H ${{ secrets.AWS_EC2_IP }} >> ~/.ssh/known_hosts
+        scp -r ./* ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_IP }}:/home/${{ secrets.AWS_EC2_USER }}/project
+
+    - name: Deploy on EC2
+      run: |
+        ssh ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_IP }} << 'EOF'
+          cd /home/${{ secrets.AWS_EC2_USER }}/project
+          docker-compose down
+          docker-compose up -d --build
+        EOF

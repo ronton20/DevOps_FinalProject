@@ -31,5 +31,8 @@ sudo systemctl start docker
 # Enable Docker to start on boot
 sudo systemctl enable docker
 
-# Add the user to the Docker group (replace 'ec2-user' with your username if different)
-sudo usermod -aG docker ${USER}
+# Add the current user to the Docker group
+sudo usermod -aG docker $USER
+
+# Apply the group changes without needing to log out and back in
+newgrp docker

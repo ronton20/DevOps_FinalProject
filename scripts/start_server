@@ -1,2 +1,5 @@
 #!/bin/bash
-service httpd start
+docker pull ronton20/devops-final-project:latest
+docker stop my_flask_app || true
+docker rm my_flask_app || true
+docker run -d -p 5000:5000 --name my_flask_app ronton20/devops-final-project:latest
